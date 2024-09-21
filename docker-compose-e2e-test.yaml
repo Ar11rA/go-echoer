@@ -31,7 +31,7 @@ services:
     image: temporalio/auto-setup
     ports:
       - 7234:7233
-  gateway-server:
+  quote-server:
     container_name: gw-srv-test
     build:
       context: .
@@ -41,7 +41,7 @@ services:
       - DB_NAME=llm_db
       - TEMPORAL_URL=temporal:7233
     ports:
-      - 9099:9099
+      - 7001:7001
     depends_on:
       - temporal
     command: ["go", "test", "-v", "./..."]

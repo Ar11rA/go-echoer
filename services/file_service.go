@@ -17,6 +17,13 @@ type FileServiceImpl struct {
 	FileWriter utils.FileWriter
 }
 
+func NewFileService(dir string, fw utils.FileWriter) FileService {
+	return &FileServiceImpl{
+		Directory:  dir,
+		FileWriter: fw,
+	}
+}
+
 // Save writes the content to a timestamped file
 func (fs *FileServiceImpl) Save(content string) error {
 	filename := time.Now().Format("2006-01-02T15:04:05.000") + ".txt"
