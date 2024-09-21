@@ -3,11 +3,15 @@ package routes
 import (
 	"quote-server/services"
 
+	_ "quote-server/docs"
+
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 // RegisterRoutes registers all routes with the Echo instance
 func RegisterRoutes(e *echo.Echo, container services.Container) {
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/health", healthHandler)
 	e.GET("/env", envHandler)
 	e.GET("/save", func(c echo.Context) error {

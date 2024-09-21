@@ -1,0 +1,97 @@
+definitions:
+  types.EchoResponse:
+    properties:
+      args:
+        properties:
+          query:
+            type: string
+        type: object
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /echo:
+    get:
+      description: Fetches data from Postman Echo based on a query parameter
+      parameters:
+      - description: Query parameter
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/types.EchoResponse'
+        "400":
+          description: Bad request - query parameter is required
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: HTTP Handler
+  /env:
+    get:
+      description: Check the env vars of the server
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Sample env value Check
+  /health:
+    get:
+      description: Check the health of the server
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health Check
+  /save:
+    get:
+      description: Saves content to a file based on the provided query parameter
+      parameters:
+      - description: Content to save
+        in: query
+        name: content
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Content saved successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request - content is required
+          schema:
+            type: string
+        "500":
+          description: Internal server error - failed to save content
+          schema:
+            type: string
+      summary: File Handler
+swagger: "2.0"
