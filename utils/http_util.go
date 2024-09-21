@@ -1,19 +1,22 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
-	"quote-server/types"
 )
 
 type HttpClient interface {
-	Get(url string) (*types.EchoResponse, error)
+	Get(url string) ([]byte, error)
+	Post(url string, body interface{}) ([]byte, error)
 }
 
+// EchoHttpClient implements HttpClient and allows generic parsing
 type EchoHttpClient struct{}
 
-func (c *EchoHttpClient) Get(url string) (*types.EchoResponse, error) {
+// Get fetches the URL and returns the raw response body as bytes
+func (c *EchoHttpClient) Get(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -26,11 +29,35 @@ func (c *EchoHttpClient) Get(url string) (*types.EchoResponse, error) {
 		return nil, err
 	}
 
-	// Parse the JSON response
-	var postmanResponse types.EchoResponse
-	if err := json.Unmarshal(body, &postmanResponse); err != nil {
+	return body, nil
+}
+
+func (c *EchoHttpClient) Post(url string, body interface{}) ([]byte, error) {
+	jsonData, err := json.Marshal(body)
+	if err != nil {
 		return nil, err
 	}
 
-	return &postmanResponse, nil
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return responseBody, nil
+}
+
+// ParseResponse is a generic method that takes the raw response body and unmarshals it into a provided type T
+func ParseResponse[T any](data []byte) (*T, error) {
+	var result T
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
 }

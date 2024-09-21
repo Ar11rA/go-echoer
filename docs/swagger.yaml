@@ -1,10 +1,16 @@
 definitions:
+  types.EchoRequest:
+    properties:
+      text:
+        type: string
+    type: object
   types.EchoResponse:
     properties:
       args:
-        properties:
-          query:
-            type: string
+        additionalProperties: true
+        type: object
+      data:
+        additionalProperties: true
         type: object
       headers:
         additionalProperties:
@@ -43,6 +49,35 @@ paths:
               type: string
             type: object
       summary: HTTP Handler
+    post:
+      consumes:
+      - application/json
+      description: Echoes the posted body back from Postman Echo
+      parameters:
+      - description: Post Request Body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.EchoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/types.EchoResponse'
+        "400":
+          description: Bad request - invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: POST Handler
   /env:
     get:
       description: Check the env vars of the server

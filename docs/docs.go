@@ -54,6 +54,50 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Echoes the posted body back from Postman Echo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "POST Handler",
+                "parameters": [
+                    {
+                        "description": "Post Request Body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.EchoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/types.EchoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - invalid request body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/env": {
@@ -136,16 +180,24 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.EchoRequest": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
         "types.EchoResponse": {
             "type": "object",
             "properties": {
                 "args": {
                     "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string"
-                        }
-                    }
+                    "additionalProperties": true
+                },
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "headers": {
                     "type": "object",

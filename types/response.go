@@ -1,9 +1,8 @@
 package types
 
 type EchoResponse struct {
-	Args struct {
-		Query string `json:"query"`
-	} `json:"args"`
-	Headers map[string]string `json:"headers"`
-	URL     string            `json:"url"`
+	Args    map[string]interface{} `json:"args"`
+	Data    map[string]interface{} `json:"data"`
+	Headers map[string]string      `json:"headers"`
+	URL     string                 `json:"url"`
 }

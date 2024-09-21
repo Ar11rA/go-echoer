@@ -18,6 +18,9 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 		return fileHandler(c, container.FileService)
 	})
 	e.GET("/echo", func(c echo.Context) error {
-		return httpHandler(c, container.HttpService)
+		return httpGetHandler(c, container.HttpService)
+	})
+	e.POST("/echo", func(c echo.Context) error {
+		return httpPostHandler(c, container.HttpService)
 	})
 }
