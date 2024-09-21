@@ -1,0 +1,7 @@
+version: '3'
+services:
+  go-app:
+    build: .
+    container_name: go-app
+    ports:
+      - "7001:7001"

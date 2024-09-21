@@ -1,0 +1,49 @@
+version: "3.5"
+services:
+  postgresql:
+    container_name: postgresql-test
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres
+    ports:
+      - 5434:5432
+    volumes:
+      - /var/lib/postgresql/data
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - '27018:27017'
+  temporal:
+    container_name: temporal-test
+    depends_on:
+      - postgresql
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+    image: temporalio/auto-setup
+    ports:
+      - 7234:7233
+  gateway-server:
+    container_name: gw-srv-test
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - MONGO_URL=mongodb://root:example@mongo:27017/DevX?authSource=admin
+      - DB_NAME=llm_db
+      - TEMPORAL_URL=temporal:7233
+    ports:
+      - 9099:9099
+    depends_on:
+      - temporal
+    command: ["go", "test", "-v", "./..."]
+
+ 
