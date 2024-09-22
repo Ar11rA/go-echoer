@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"quote-server/config"
 	"quote-server/routes"
 	"quote-server/services"
 	"quote-server/utils"
+	"strconv"
 
+	"github.com/jackc/pgx"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -34,10 +37,11 @@ func registerMiddleware(e *echo.Echo) {
 
 func registerServices(e *echo.Echo) {
 
+	// Initialize other services here as needed
 	container := services.Container{
 		FileService: registerFileService(),
 		HttpService: registerHttpService(),
-		// Initialize other services here as needed
+		DBService:   registerDBService(),
 	}
 
 	// Register routes
@@ -64,4 +68,27 @@ func registerHttpService() services.HttpService {
 	httpService := services.NewHttpService(httpClient)
 
 	return httpService
+}
+
+func registerDBService() services.DBService {
+	portStr := os.Getenv("PG_DB_PORT") // Read port from environment variable
+	port, err := strconv.Atoi(portStr) // Convert string to int
+	if err != nil {
+		log.Fatalf("Invalid port number: %v", err)
+	}
+
+	conn, err := pgx.Connect(pgx.ConnConfig{
+		Host:     os.Getenv("PG_DB_HOST"),
+		Port:     uint16(port),
+		User:     os.Getenv("PG_DB_USER"),
+		Password: os.Getenv("PG_DB_PASS"),
+		Database: os.Getenv("PG_DB_NAME"),
+	})
+	if err != nil {
+		panic(fmt.Sprintf("Unable to connect to database: %v", err))
+	}
+
+	dbClient := &utils.PgxClient{Conn: conn}
+	dbService := services.NewDbService(dbClient)
+	return dbService
 }

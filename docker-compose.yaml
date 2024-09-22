@@ -5,3 +5,25 @@ services:
     container_name: go-app
     ports:
       - "7001:7001"
+  postgresql:
+    container_name: postgresql-test
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: quoter
+    image: postgres
+    ports:
+      - 5435:5432
+    volumes:
+      - /var/lib/postgresql/data
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: quoter
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+    ports:
+      - '27019:27017'
+  redis-cache:
+    image: redis:latest
+    ports:
+      - '6379:6379'

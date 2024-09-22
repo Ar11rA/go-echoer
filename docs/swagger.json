@@ -166,6 +166,87 @@
                     }
                 }
             }
+        },
+        "/users": {
+            "post": {
+                "description": "Creates a new user with the provided username and email",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create User",
+                "parameters": [
+                    {
+                        "description": "User object",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - username and email are required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error - failed to create user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "description": "Retrieves user information by user ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get User by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found",
+                        "schema": {
+                            "$ref": "#/definitions/types.UserModel"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error - failed to retrieve user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -195,6 +276,34 @@
                     }
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.UserModel": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "description": "Add fields according to your schema",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Assuming ID is auto-incremented",
+                    "type": "integer"
+                },
+                "username": {
+                    "description": "Add fields according to your schema",
+                    "type": "string"
+                }
+            }
+        },
+        "types.UserRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 }
             }

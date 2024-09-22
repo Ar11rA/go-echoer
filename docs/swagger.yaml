@@ -19,6 +19,25 @@ definitions:
       url:
         type: string
     type: object
+  types.UserModel:
+    properties:
+      email:
+        description: Add fields according to your schema
+        type: string
+      id:
+        description: Assuming ID is auto-incremented
+        type: integer
+      username:
+        description: Add fields according to your schema
+        type: string
+    type: object
+  types.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -129,4 +148,57 @@ paths:
           schema:
             type: string
       summary: File Handler
+  /users:
+    post:
+      description: Creates a new user with the provided username and email
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/types.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+        "400":
+          description: Bad request - username and email are required
+          schema:
+            type: string
+        "500":
+          description: Internal server error - failed to create user
+          schema:
+            type: string
+      summary: Create User
+  /users/{id}:
+    get:
+      description: Retrieves user information by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: '#/definitions/types.UserModel'
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error - failed to retrieve user
+          schema:
+            type: string
+      summary: Get User by ID
 swagger: "2.0"

@@ -23,4 +23,10 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 	e.POST("/echo", func(c echo.Context) error {
 		return httpPostHandler(c, container.HttpService)
 	})
+	e.POST("/users", func(c echo.Context) error {
+		return createUserHandler(c, container.DBService)
+	})
+	e.GET("/users/:id", func(c echo.Context) error {
+		return getUserByIDHandler(c, container.DBService)
+	})
 }
