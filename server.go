@@ -14,6 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+	"github.com/redis/go-redis/v9"
 )
 
 func loadEnv() {
@@ -39,9 +40,10 @@ func registerServices(e *echo.Echo) {
 
 	// Initialize other services here as needed
 	container := services.Container{
-		FileService: registerFileService(),
-		HttpService: registerHttpService(),
-		DBService:   registerDBService(),
+		FileService:  registerFileService(),
+		HttpService:  registerHttpService(),
+		DBService:    registerDBService(),
+		RedisService: registerCacheService(),
 	}
 
 	// Register routes
@@ -91,4 +93,16 @@ func registerDBService() services.DBService {
 	dbClient := &utils.PgxClient{Conn: conn}
 	dbService := services.NewDbService(dbClient)
 	return dbService
+}
+
+func registerCacheService() services.RedisService {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_HOST"),
+		Password: os.Getenv("REDIS_PASSWORD"), // no password set
+		DB:       0,                           // use default DB
+	})
+
+	redisClient := &utils.RedisUtil{Client: rdb}
+	redisService := services.NewRedisService(redisClient)
+	return redisService
 }

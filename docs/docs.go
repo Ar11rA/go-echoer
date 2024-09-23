@@ -140,6 +140,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/redis/save": {
+            "post": {
+                "description": "Save a key-value pair to Redis using POST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Save Data to Redis",
+                "parameters": [
+                    {
+                        "description": "Key-value pair to save",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.RedisDataRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data saved successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/{key}": {
+            "get": {
+                "description": "Retrieve a value from Redis using the provided key",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Data from Redis",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Key to retrieve value",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Value retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error - failed to retrieve data",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/save": {
             "get": {
                 "description": "Saves content to a file based on the provided query parameter",
@@ -287,6 +365,21 @@ const docTemplate = `{
                     }
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.RedisDataRequest": {
+            "type": "object",
+            "required": [
+                "key",
+                "value"
+            ],
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }

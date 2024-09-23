@@ -29,4 +29,10 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 	e.GET("/users/:id", func(c echo.Context) error {
 		return getUserByIDHandler(c, container.DBService)
 	})
+	e.POST("/redis/save", func(c echo.Context) error {
+		return redisSaveHandler(c, container.RedisService)
+	})
+	e.GET("/redis/:key", func(c echo.Context) error {
+		return redisGetHandler(c, container.RedisService)
+	})
 }

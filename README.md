@@ -2,37 +2,33 @@
 
 This project is a simple RESTful API server built using the Echo framework in Go. It includes various features such as health checks, file operations, and HTTP integrations. The server is structured to follow best practices, including dependency injection and organized routes.
 
-## Project Structure
+## Project Use cases
 
 ```sh
 .
-├── Dockerfile
-├── Dockerfile.qa
-├── README.md
-├── config
-│   └── logger.go
-├── docker-compose-e2e-test.yaml
-├── docker-compose.yaml
-├── go.mod
-├── go.sum
-├── main.go
-├── routes
-│   ├── file.go
-│   ├── health.go
-│   ├── http.go
-│   └── routes.go
-├── server.go
-├── services
-│   ├── container.go
-│   ├── file_service.go
-│   ├── file_service_test.go
-│   ├── http_service.go
-│   └── http_service_test.go
-├── types
-│   └── response.go
-└── utils
-    ├── file_util.go
-    └── http_util.go
+├── Redis
+│   ├── Connect to Redis
+│   ├── Perform CRUD operations in Redis
+│   ├── Cache data using Redis
+│   └── Handle Redis connection lifecycle
+│
+├── PostgreSQL (PSQL)
+│   ├── Establish a PostgreSQL connection
+│   ├── Perform database migrations
+│   ├── CRUD operations with PostgreSQL
+│   ├── Query optimization and indexing
+│   └── Handle database connection pooling
+│
+├── File Management
+│   ├── Upload and save files
+│   ├── Read files from a directory
+│   └── File validation and error handling
+│
+└── HTTP Server
+    ├── Handle HTTP requests and responses
+    ├── Define RESTful routes for different services
+    ├── Log requests and responses in JSON format
+    └── Middleware for request validation and security
 ```
 
 ## Getting Started

@@ -19,6 +19,16 @@ definitions:
       url:
         type: string
     type: object
+  types.RedisDataRequest:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    required:
+    - key
+    - value
+    type: object
   types.UserModel:
     properties:
       email:
@@ -123,6 +133,57 @@ paths:
               type: string
             type: object
       summary: Health Check
+  /redis/{key}:
+    get:
+      description: Retrieve a value from Redis using the provided key
+      parameters:
+      - description: Key to retrieve value
+        in: path
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Value retrieved successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error - failed to retrieve data
+          schema:
+            type: string
+      summary: Get Data from Redis
+  /redis/save:
+    post:
+      consumes:
+      - application/json
+      description: Save a key-value pair to Redis using POST
+      parameters:
+      - description: Key-value pair to save
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.RedisDataRequest'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Data saved successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request - invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Save Data to Redis
   /save:
     get:
       description: Saves content to a file based on the provided query parameter
