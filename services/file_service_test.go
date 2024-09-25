@@ -32,10 +32,7 @@ func TestFileServiceImpl_Save(t *testing.T) {
 		},
 	}
 
-	fileService := &FileServiceImpl{
-		Directory:  "./",
-		FileWriter: mockFileWriter,
-	}
+	fileService := NewFileService(",", mockFileWriter)
 
 	// Act
 	err := fileService.Save("test content")

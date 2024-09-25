@@ -140,6 +140,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/quotes": {
+            "get": {
+                "description": "Fetches multiple quotes from Postman Echo API based on the limit parameter",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "HTTP Handler for Fetching Multiple Quotes",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Number of quotes to fetch",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of quotes",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.QuoteResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - limit parameter is required or invalid",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/redis/save": {
             "post": {
                 "description": "Save a key-value pair to Redis using POST",
@@ -366,6 +410,38 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "types.QuoteResponse": {
+            "type": "object",
+            "properties": {
+                "_id": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "string"
+                },
+                "authorSlug": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "dateAdded": {
+                    "type": "string"
+                },
+                "dateModified": {
+                    "type": "string"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

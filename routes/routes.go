@@ -20,6 +20,9 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 	e.GET("/echo", func(c echo.Context) error {
 		return httpGetHandler(c, container.HttpService)
 	})
+	e.GET("/quotes", func(c echo.Context) error {
+		return httpGetQuotesHandler(c, container.HttpService)
+	})
 	e.POST("/echo", func(c echo.Context) error {
 		return httpPostHandler(c, container.HttpService)
 	})

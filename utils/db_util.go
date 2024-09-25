@@ -5,10 +5,14 @@ import (
 	"github.com/jackc/pgx"
 )
 
+type Row interface {
+	Scan(dest ...interface{}) error
+}
+
 // DBClient defines the interface for database operations
 type DBClient interface {
 	Exec(query string, args ...interface{}) error
-	Query(query string, args ...interface{}) *pgx.Row
+	Query(query string, args ...interface{}) Row
 	// Add other DB methods as needed
 }
 
@@ -21,7 +25,7 @@ func (c *PgxClient) Exec(query string, args ...interface{}) error {
 	return err
 }
 
-func (c *PgxClient) Query(query string, args ...interface{}) *pgx.Row {
+func (c *PgxClient) Query(query string, args ...interface{}) Row {
 	row := c.Conn.QueryRow(query, args...)
 	return row
 }

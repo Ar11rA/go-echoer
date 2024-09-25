@@ -19,6 +19,27 @@ definitions:
       url:
         type: string
     type: object
+  types.QuoteResponse:
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      authorSlug:
+        type: string
+      content:
+        type: string
+      dateAdded:
+        type: string
+      dateModified:
+        type: string
+      length:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
   types.RedisDataRequest:
     properties:
       key:
@@ -133,6 +154,36 @@ paths:
               type: string
             type: object
       summary: Health Check
+  /quotes:
+    get:
+      description: Fetches multiple quotes from Postman Echo API based on the limit
+        parameter
+      parameters:
+      - description: Number of quotes to fetch
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of quotes
+          schema:
+            items:
+              $ref: '#/definitions/types.QuoteResponse'
+            type: array
+        "400":
+          description: Bad request - limit parameter is required or invalid
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: HTTP Handler for Fetching Multiple Quotes
   /redis/{key}:
     get:
       description: Retrieve a value from Redis using the provided key

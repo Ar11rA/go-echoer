@@ -137,3 +137,49 @@ func TestHttpServiceImpl_PostEcho_Error(t *testing.T) {
 	assert.Nil(t, response)
 	assert.Contains(t, err.Error(), "network error")
 }
+
+// TestHttpServiceImpl_GetQuotes tests the GetQuotes function
+func TestHttpServiceImpl_GetQuotes(t *testing.T) {
+	// Arrange
+	limit := int32(2)
+	mockQuote := &types.QuoteResponse{Content: "This is a quote!"}
+	mockResponseBytes, _ := json.Marshal(mockQuote)
+
+	mockHttpClient := &MockHttpClient{
+		GetFunc: func(url string) ([]byte, error) {
+			return mockResponseBytes, nil // Simulate a successful response
+		},
+	}
+
+	httpService := NewHttpService(mockHttpClient)
+
+	// Act
+	quotes, err := httpService.GetQuotes(limit)
+
+	// Assert
+	assert.NoError(t, err)
+	assert.NotNil(t, quotes)
+	assert.Len(t, quotes, int(limit))
+	assert.Equal(t, mockQuote.Content, quotes[0].Content)
+}
+
+func TestHttpServiceImpl_GetQuotes_Error(t *testing.T) {
+	// Arrange
+	limit := int32(2)
+
+	mockHttpClient := &MockHttpClient{
+		GetFunc: func(url string) ([]byte, error) {
+			return nil, fmt.Errorf("network error") // Simulate an error response
+		},
+	}
+
+	httpService := NewHttpService(mockHttpClient)
+
+	// Act
+	quotes, err := httpService.GetQuotes(limit)
+
+	// Assert
+	assert.Error(t, err)
+	assert.Nil(t, quotes)
+	assert.Contains(t, err.Error(), "network error")
+}
