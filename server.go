@@ -14,6 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+	"github.com/rabbitmq/amqp091-go"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -44,6 +45,7 @@ func registerServices(e *echo.Echo) {
 		HttpService:  registerHttpService(),
 		DBService:    registerDBService(),
 		RedisService: registerCacheService(),
+		MQService:    registerMQService(),
 	}
 
 	// Register routes
@@ -105,4 +107,21 @@ func registerCacheService() services.RedisService {
 	redisClient := &utils.RedisUtil{Client: rdb}
 	redisService := services.NewRedisService(redisClient)
 	return redisService
+}
+
+func registerMQService() services.RabbitMQService {
+	conn, err := amqp091.Dial(os.Getenv("RABBITMQ_URL"))
+	if err != nil {
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	}
+
+	// Create RabbitMQ utility
+	rabbitUtil, err := utils.NewRabbitMQUtil(conn)
+	if err != nil {
+		log.Fatalf("Failed to create RabbitMQ util: %v", err)
+	}
+
+	// Create RabbitMQ service
+	rabbitMQService := services.NewRabbitMQService(rabbitUtil)
+	return rabbitMQService
 }

@@ -140,6 +140,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/publish": {
+            "post": {
+                "description": "Publishes a message to a RabbitMQ queue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Publish Message to RabbitMQ",
+                "parameters": [
+                    {
+                        "description": "MessagePublishRequest object",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MessagePublishRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message published successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Content is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to publish message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/quotes": {
             "get": {
                 "description": "Fetches multiple quotes from Postman Echo API based on the limit parameter",
@@ -409,6 +452,17 @@ const docTemplate = `{
                     }
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.MessagePublishRequest": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
                     "type": "string"
                 }
             }

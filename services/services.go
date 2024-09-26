@@ -5,4 +5,5 @@ type Container struct {
 	HttpService  HttpService
 	DBService    DBService
 	RedisService RedisService
+	MQService    RabbitMQService
 }

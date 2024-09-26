@@ -13,3 +13,7 @@ type RedisDataRequest struct {
 	Key   string `json:"key" validate:"required"`
 	Value string `json:"value" validate:"required"`
 }
+
+type MessagePublishRequest struct {
+	Content string `json:"content" validate:"required"`
+}

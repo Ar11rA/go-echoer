@@ -38,4 +38,7 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 	e.GET("/redis/:key", func(c echo.Context) error {
 		return redisGetHandler(c, container.RedisService)
 	})
+	e.POST("/publish", func(c echo.Context) error {
+		return rabbitMQPostHandler(c, container.MQService)
+	})
 }

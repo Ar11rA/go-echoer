@@ -19,6 +19,13 @@ definitions:
       url:
         type: string
     type: object
+  types.MessagePublishRequest:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
   types.QuoteResponse:
     properties:
       _id:
@@ -154,6 +161,34 @@ paths:
               type: string
             type: object
       summary: Health Check
+  /publish:
+    post:
+      consumes:
+      - application/json
+      description: Publishes a message to a RabbitMQ queue
+      parameters:
+      - description: MessagePublishRequest object
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/types.MessagePublishRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Message published successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request - Content is required
+          schema:
+            type: string
+        "500":
+          description: Failed to publish message
+          schema:
+            type: string
+      summary: Publish Message to RabbitMQ
   /quotes:
     get:
       description: Fetches multiple quotes from Postman Echo API based on the limit
