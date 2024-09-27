@@ -1,35 +1,37 @@
 # Go Echo Server
 
-This project is a simple RESTful API server built using the Echo framework in Go. It includes various features such as health checks, file operations, and HTTP integrations. The server is structured to follow best practices, including dependency injection and organized routes.
+## Project Integrations
 
-## Project Use cases
-
-```sh
-.
-├── Redis
-│   ├── Connect to Redis
-│   ├── Perform CRUD operations in Redis
-│   ├── Cache data using Redis
-│   └── Handle Redis connection lifecycle
-│
-├── PostgreSQL (PSQL)
-│   ├── Establish a PostgreSQL connection
-│   ├── Perform database migrations
-│   ├── CRUD operations with PostgreSQL
-│   ├── Query optimization and indexing
-│   └── Handle database connection pooling
-│
-├── File Management
-│   ├── Upload and save files
-│   ├── Read files from a directory
-│   └── File validation and error handling
-│
-└── HTTP Server
-    ├── Handle HTTP requests and responses
-    ├── Define RESTful routes for different services
-    ├── Log requests and responses in JSON format
-    └── Middleware for request validation and security
-```
+| **Service**         | **Details**                                           |
+|---------------------|-------------------------------------------------------|
+| **File Management**  | - Upload and save files                               |
+|                     | - Read files from a directory                         |
+|                     | - File validation and error handling                  |
+| **Redis**           | - Connect to Redis                                    |
+|                     | - Perform CRUD operations in Redis                    |
+|                     | - Cache data using Redis                              |
+|                     | - Handle Redis connection lifecycle                   |
+| **PostgreSQL (PSQL)**| - Establish a PostgreSQL connection                   |
+|                     | - Perform database migrations                         |
+|                     | - CRUD operations with PostgreSQL                     |
+|                     | - Query optimization and indexing                     |
+|                     | - Handle database connection pooling                  |
+| **HTTP Server**      | - Handle HTTP requests and responses                  |
+|                     | - Define RESTful routes for different services        |
+|                     | - Log requests and responses in JSON format           |
+|                     | - Middleware for request validation and security      |
+| **MongoDB**          | - Connect to MongoDB                                  |
+|                     | - Perform CRUD operations in MongoDB                  |
+|                     | - Handle MongoDB connection pooling                   |
+|                     | - Schema design and indexing                          |
+| **RabbitMQ**         | - Connect to RabbitMQ                                 |
+|                     | - Publish/Subscribe messaging                         |
+|                     | - Message queue management                            |
+|                     | - Handle RabbitMQ connection lifecycle                |
+| **MinIO**            | - Connect to MinIO                                    |
+|                     | - Upload and retrieve objects from MinIO              |
+|                     | - Handle file storage in MinIO buckets                |
+|                     | - Manage MinIO connection lifecycle                   |
 
 ## Getting Started
 
@@ -49,14 +51,17 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    git clone https://github.com/Ar11rA/quote-server.git
    ```
-
 2. Enter into quote-server: `cd quote-server`
 3. Install Dependencies
    ```bash
    go mod tidy
    go install
    ```
-4. Run the server
+4. Test the server
+   ```bash
+   go test -v ./...
+   ```
+5. Run the server
    ```bash
    go run .
    ```

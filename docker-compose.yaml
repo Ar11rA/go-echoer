@@ -12,7 +12,7 @@ services:
       POSTGRES_USER: quoter
     image: postgres
     ports:
-      - 5435:5432
+      - 5432:5432
     volumes:
       - /var/lib/postgresql/data
   mongo:
@@ -22,8 +22,14 @@ services:
       MONGO_INITDB_ROOT_USERNAME: quoter
       MONGO_INITDB_ROOT_PASSWORD: mongopass
     ports:
-      - '27019:27017'
+      - '27017:27017'
   redis-cache:
     image: redis:latest
     ports:
       - '6379:6379'
+  mq:
+    image: rabbitmq:management
+    restart: always
+    ports:
+      - '5672:5672'
+      - '15672:15672'
