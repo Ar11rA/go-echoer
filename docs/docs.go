@@ -140,6 +140,100 @@ const docTemplate = `{
                 }
             }
         },
+        "/logs": {
+            "get": {
+                "description": "Fetches logs from the database by application ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get logs by application ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "appID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of logs to fetch",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of logs",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Log"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - application ID is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Inserts a new log entry into the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Insert a new log",
+                "parameters": [
+                    {
+                        "description": "Log entry",
+                        "name": "log",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.LogRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Log successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/types.Log"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - invalid request body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/publish": {
             "post": {
                 "description": "Publishes a message to a RabbitMQ queue",
@@ -452,6 +546,31 @@ const docTemplate = `{
                     }
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Log": {
+            "type": "object",
+            "properties": {
+                "applicationID": {
+                    "type": "string"
+                },
+                "logs": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.LogRequest": {
+            "type": "object",
+            "properties": {
+                "applicationId": {
+                    "type": "string"
+                },
+                "logs": {
                     "type": "string"
                 }
             }

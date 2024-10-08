@@ -41,4 +41,10 @@ func RegisterRoutes(e *echo.Echo, container services.Container) {
 	e.POST("/publish", func(c echo.Context) error {
 		return rabbitMQPostHandler(c, container.MQService)
 	})
+	e.POST("/logs", func(c echo.Context) error {
+		return postLogHandler(c, container.LogService)
+	})
+	e.GET("/logs", func(c echo.Context) error {
+		return getLogsHandler(c, container.LogService)
+	})
 }

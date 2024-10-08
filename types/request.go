@@ -1,5 +1,10 @@
 package types
 
+type LogRequest struct {
+	ApplicationID string `json:"applicationId"`
+	Logs          string `json:"logs"`
+}
+
 type EchoRequest struct {
 	Text string `json:"text"`
 }

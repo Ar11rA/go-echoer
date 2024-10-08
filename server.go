@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"quote-server/config"
@@ -8,6 +9,7 @@ import (
 	"quote-server/services"
 	"quote-server/utils"
 	"strconv"
+	"time"
 
 	"github.com/jackc/pgx"
 	"github.com/joho/godotenv"
@@ -16,6 +18,8 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/redis/go-redis/v9"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func loadEnv() {
@@ -46,6 +50,7 @@ func registerServices(e *echo.Echo) {
 		DBService:    registerDBService(),
 		RedisService: registerCacheService(),
 		MQService:    registerMQService(),
+		LogService:   registerMongoService(),
 	}
 
 	// Register routes
@@ -124,4 +129,31 @@ func registerMQService() services.RabbitMQService {
 	// Create RabbitMQ service
 	rabbitMQService := services.NewRabbitMQService(rabbitUtil)
 	return rabbitMQService
+}
+
+func registerMongoService() services.LogService {
+	// Set MongoDB connection options
+	clientOptions := options.Client().
+		ApplyURI(os.Getenv("MONGODB_URI")) // You should set this environment variable
+
+	// Create a new client and connect to the MongoDB server
+	client, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+
+	// Ping the database to verify connection
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := client.Ping(ctx, nil); err != nil {
+		log.Fatalf("Failed to ping MongoDB: %v", err)
+	}
+
+	// Create the MongoDB utility with specified database and collection names
+	dbName := os.Getenv("MONGODB_DB_NAME") // Set this environment variable
+	mongoUtil := utils.NewMongoDBUtil(client, dbName)
+
+	// Create the LogService using the MongoDB utility
+	logService := services.NewLogService(mongoUtil)
+	return logService
 }
