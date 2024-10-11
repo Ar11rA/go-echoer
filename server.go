@@ -18,6 +18,7 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/redis/go-redis/v9"
+	"github.com/segmentio/kafka-go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -51,6 +52,7 @@ func registerServices(e *echo.Echo) {
 		RedisService: registerCacheService(),
 		MQService:    registerMQService(),
 		LogService:   registerMongoService(),
+		KafkaService: registerKafkaService(),
 	}
 
 	// Register routes
@@ -156,4 +158,27 @@ func registerMongoService() services.LogService {
 	// Create the LogService using the MongoDB utility
 	logService := services.NewLogService(mongoUtil)
 	return logService
+}
+
+func registerKafkaService() services.KafkaService {
+	// Get the Kafka broker address from the environment variable
+	brokerAddress := os.Getenv("KAFKA_BROKER_ADDRESS") // Set this environment variable
+	topic := os.Getenv("KAFKA_TOPIC")                  // Set this environment variable
+
+	// Create a Kafka writer with necessary configurations
+	kafkaWriter := &kafka.Writer{
+		Addr:     kafka.TCP(brokerAddress),
+		Topic:    topic,
+		Balancer: &kafka.LeastBytes{},
+	}
+
+	// Optionally, you can create a Kafka reader or consumer here for bi-directional communication
+	// e.g., kafkaReader := kafka.NewReader(kafka.ReaderConfig{...})
+
+	// Create the Kafka utility
+	kafkaUtil := utils.NewKafkaUtil(kafkaWriter)
+
+	// Create the KafkaService using the Kafka utility
+	kafkaService := services.NewKafkaService(kafkaUtil)
+	return kafkaService
 }

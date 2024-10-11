@@ -129,6 +129,54 @@
                 }
             }
         },
+        "/kafka/publish/{key}/{message}": {
+            "get": {
+                "description": "Publishes a message to a Kafka topic using key and message from path params",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Publish Message to Kafka",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Key for Kafka message",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Message to be published",
+                        "name": "message",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message published successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Missing key or message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to publish message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/logs": {
             "get": {
                 "description": "Fetches logs from the database by application ID",
@@ -223,49 +271,6 @@
                 }
             }
         },
-        "/publish": {
-            "post": {
-                "description": "Publishes a message to a RabbitMQ queue",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Publish Message to RabbitMQ",
-                "parameters": [
-                    {
-                        "description": "MessagePublishRequest object",
-                        "name": "message",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.MessagePublishRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Message published successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request - Content is required",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to publish message",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/quotes": {
             "get": {
                 "description": "Fetches multiple quotes from Postman Echo API based on the limit parameter",
@@ -305,6 +310,49 @@
                             "additionalProperties": {
                                 "type": "string"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/rabbit/publish": {
+            "post": {
+                "description": "Publishes a message to a RabbitMQ queue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Publish Message to RabbitMQ",
+                "parameters": [
+                    {
+                        "description": "MessagePublishRequest object",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.MessagePublishRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message published successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - Content is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to publish message",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }

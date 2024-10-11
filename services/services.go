@@ -7,4 +7,5 @@ type Container struct {
 	RedisService RedisService
 	MQService    RabbitMQService
 	LogService   LogService
+	KafkaService KafkaService
 }

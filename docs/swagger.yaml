@@ -177,6 +177,39 @@ paths:
               type: string
             type: object
       summary: Health Check
+  /kafka/publish/{key}/{message}:
+    get:
+      consumes:
+      - application/json
+      description: Publishes a message to a Kafka topic using key and message from
+        path params
+      parameters:
+      - description: Key for Kafka message
+        in: path
+        name: key
+        required: true
+        type: string
+      - description: Message to be published
+        in: path
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Message published successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request - Missing key or message
+          schema:
+            type: string
+        "500":
+          description: Failed to publish message
+          schema:
+            type: string
+      summary: Publish Message to Kafka
   /logs:
     get:
       description: Fetches logs from the database by application ID
@@ -239,34 +272,6 @@ paths:
               type: string
             type: object
       summary: Insert a new log
-  /publish:
-    post:
-      consumes:
-      - application/json
-      description: Publishes a message to a RabbitMQ queue
-      parameters:
-      - description: MessagePublishRequest object
-        in: body
-        name: message
-        required: true
-        schema:
-          $ref: '#/definitions/types.MessagePublishRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Message published successfully
-          schema:
-            type: string
-        "400":
-          description: Bad request - Content is required
-          schema:
-            type: string
-        "500":
-          description: Failed to publish message
-          schema:
-            type: string
-      summary: Publish Message to RabbitMQ
   /quotes:
     get:
       description: Fetches multiple quotes from Postman Echo API based on the limit
@@ -297,6 +302,34 @@ paths:
               type: string
             type: object
       summary: HTTP Handler for Fetching Multiple Quotes
+  /rabbit/publish:
+    post:
+      consumes:
+      - application/json
+      description: Publishes a message to a RabbitMQ queue
+      parameters:
+      - description: MessagePublishRequest object
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/types.MessagePublishRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Message published successfully
+          schema:
+            type: string
+        "400":
+          description: Bad request - Content is required
+          schema:
+            type: string
+        "500":
+          description: Failed to publish message
+          schema:
+            type: string
+      summary: Publish Message to RabbitMQ
   /redis/{key}:
     get:
       description: Retrieve a value from Redis using the provided key
